@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -16,14 +17,34 @@ use Inertia\Inertia;
 |
 */
 
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
+
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+    return Inertia::render('Home');
+})->name('home');
+
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
+Route::get('/document', function () {
+    return Inertia::render('Document');
+})->name('document');
+
+Route::get('/data-insiden', [ReportController::class, 'dataIncident'])->name('data.insiden');
+Route::get('/data-bahaya', [ReportController::class, 'dataWarning'])->name('data.bahaya');
+Route::get('/data-kegiatan', [ReportController::class, 'dataActivity'])->name('data.kegiatan');
+
+Route::get('/lapor-insiden', [ReportController::class, 'formIncident'])->middleware(['auth'])->name('lapor.insiden');
+Route::get('/lapor-bahaya', [ReportController::class, 'formWarning'])->middleware(['auth'])->name('lapor.bahaya');
+Route::post('/lapor', [ReportController::class, 'submit'])->middleware(['auth'])->name('lapor.submit');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

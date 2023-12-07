@@ -1,12 +1,11 @@
+import { useEffect, FormEventHandler } from "react";
 import Checkbox from "@/Components/_Old/Checkbox";
+import GuestLayout from "@/Layouts/_Old/GuestLayout";
 import InputError from "@/Components/_Old/InputError";
 import InputLabel from "@/Components/_Old/InputLabel";
 import PrimaryButton from "@/Components/_Old/PrimaryButton";
 import TextInput from "@/Components/_Old/TextInput";
-import { Button } from "@/Components/ui/button";
-import AuthLayout from "@/Layouts/AuthLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { FormEventHandler, useEffect } from "react";
 
 export default function Login({
     status,
@@ -34,12 +33,8 @@ export default function Login({
     };
 
     return (
-        <AuthLayout>
+        <GuestLayout>
             <Head title="Log in" />
-
-            <p className="text-red-700 font-bold text-2xl text-center">
-                Login To Your Account
-            </p>
 
             {status && (
                 <div className="mb-4 font-medium text-sm text-green-600">
@@ -97,20 +92,20 @@ export default function Login({
                 </div>
 
                 <div className="flex items-center justify-end mt-4">
-                    <Button
-                        className="w-full flex justify-center bg-red-800 hover:bg-red-900"
-                        disabled={processing}
-                    >
-                        Register
-                    </Button>
+                    {canResetPassword && (
+                        <Link
+                            href={route("password.request")}
+                            className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                        >
+                            Forgot your password?
+                        </Link>
+                    )}
+
+                    <PrimaryButton className="ms-4" disabled={processing}>
+                        Log in
+                    </PrimaryButton>
                 </div>
             </form>
-            <p className="text-center text-red-800 text-sm">
-                Not yet registered?{" "}
-                <Link href={route("register")} className="font-bold">
-                    Register
-                </Link>
-            </p>
-        </AuthLayout>
+        </GuestLayout>
     );
 }

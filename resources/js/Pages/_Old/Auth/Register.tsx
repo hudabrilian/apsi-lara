@@ -1,14 +1,12 @@
-import Checkbox from "@/Components/_Old/Checkbox";
+import { useEffect, FormEventHandler } from "react";
+import GuestLayout from "@/Layouts/_Old/GuestLayout";
 import InputError from "@/Components/_Old/InputError";
 import InputLabel from "@/Components/_Old/InputLabel";
 import PrimaryButton from "@/Components/_Old/PrimaryButton";
 import TextInput from "@/Components/_Old/TextInput";
-import { Button } from "@/Components/ui/button";
-import AuthLayout from "@/Layouts/AuthLayout";
 import { Head, Link, useForm } from "@inertiajs/react";
-import { FormEventHandler, useEffect } from "react";
 
-export default function Login() {
+export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         email: "",
@@ -29,12 +27,8 @@ export default function Login() {
     };
 
     return (
-        <AuthLayout>
-            <Head title="Log in" />
-
-            <p className="text-red-700 font-bold text-2xl text-center">
-                Create New Account
-            </p>
+        <GuestLayout>
+            <Head title="Register" />
 
             <form onSubmit={submit}>
                 <div>
@@ -113,21 +107,19 @@ export default function Login() {
                     />
                 </div>
 
-                <div className="mt-4">
-                    <Button
-                        className="w-full flex justify-center bg-red-800 hover:bg-red-900"
-                        disabled={processing}
+                <div className="flex items-center justify-end mt-4">
+                    <Link
+                        href={route("login")}
+                        className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                     >
+                        Already registered?
+                    </Link>
+
+                    <PrimaryButton className="ms-4" disabled={processing}>
                         Register
-                    </Button>
+                    </PrimaryButton>
                 </div>
             </form>
-            <p className="text-center text-red-800 text-sm">
-                Already registered?{" "}
-                <Link href={route("login")} className="font-bold">
-                    Login
-                </Link>
-            </p>
-        </AuthLayout>
+        </GuestLayout>
     );
 }
