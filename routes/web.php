@@ -1,9 +1,12 @@
 <?php
 
+use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReportController;
+use App\Models\Document;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 /*
@@ -34,17 +37,29 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-Route::get('/document', function () {
-    return Inertia::render('Document');
-})->name('document');
+Route::get('/sertifikasi-k3', function () {
+    return Inertia::render('Sertifikasi');
+})->name('sertifikasi.k3');
+
+Route::get('/audit-k3', function () {
+    return Inertia::render('Audit');
+})->name('audit.k3');
+
+Route::get('/document', [DocumentController::class, 'showBerkas'])->middleware(['auth'])->name('document');
+Route::post('/document', [DocumentController::class, 'showBerkas'])->middleware(['auth'])->name('document.search');
+Route::get('/tambah-dokumen', [DocumentController::class, 'tambahBerkas'])->middleware(['auth'])->name('tambah.dokumen');
+Route::post('/tambah-dokumen', [DocumentController::class, 'store'])->middleware(['auth'])->name('store.dokumen');
 
 Route::get('/data-insiden', [ReportController::class, 'dataIncident'])->name('data.insiden');
 Route::get('/data-bahaya', [ReportController::class, 'dataWarning'])->name('data.bahaya');
 Route::get('/data-kegiatan', [ReportController::class, 'dataActivity'])->name('data.kegiatan');
+Route::get('/report/{report}', [ReportController::class, 'reportInformation'])->name('data.informasi');
 
 Route::get('/lapor-insiden', [ReportController::class, 'formIncident'])->middleware(['auth'])->name('lapor.insiden');
 Route::get('/lapor-bahaya', [ReportController::class, 'formWarning'])->middleware(['auth'])->name('lapor.bahaya');
+Route::get('/lapor-kegiatan', [ReportController::class, 'formActivity'])->middleware(['auth'])->name('lapor.kegiatan');
 Route::post('/lapor', [ReportController::class, 'submit'])->middleware(['auth'])->name('lapor.submit');
+Route::delete('/lapor/{report}/delete', [ReportController::class, 'remove'])->middleware(['auth'])->name('lapor.delete');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');

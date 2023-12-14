@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('file');
             $table->timestamps();
 
-            $table->foreign('report_id')->references('id')->on('reports');
+            $table->foreign('report_id')->references('id')->on('reports')->onDelete('cascade');
         });
     }
 

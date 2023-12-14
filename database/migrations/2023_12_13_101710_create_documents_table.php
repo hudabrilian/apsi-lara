@@ -11,21 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('reports', function (Blueprint $table) {
+        Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
-
-            $table->enum('type', ['incident', 'warning', 'activity']);
-
             $table->string("title");
             $table->string("description");
-            $table->string("location");
-            $table->string("timeAt");
-            $table->string("keterangan")->nullable(true);
-
+            $table->string("file");
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -34,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('documents');
     }
 };

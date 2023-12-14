@@ -3,6 +3,7 @@ import {
     Dialog,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
@@ -16,10 +17,20 @@ import {
     TableHeader,
     TableRow,
 } from "@/Components/ui/table";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/Components/ui/tooltip";
 import Layout from "@/Layouts/Layout";
 import { PageProps } from "@/types";
-import { EyeIcon } from "@heroicons/react/24/outline";
-import { Head } from "@inertiajs/react";
+import {
+    EyeIcon,
+    InformationCircleIcon,
+    TrashIcon,
+} from "@heroicons/react/24/solid";
+import { Head, Link, router } from "@inertiajs/react";
 import dateFormat from "dateformat";
 
 export default function DataInsiden({
@@ -29,23 +40,35 @@ export default function DataInsiden({
 }: PageProps<{
     type: string;
     reports: {
+        id: string;
         timeAt: string;
         title: string;
         description: string;
         location: string;
+        keterangan: string;
         files: {
             id: string;
             file: string;
         }[];
     }[];
 }>) {
-    console.log(reports);
     return (
         <Layout user={auth.user}>
             <Head title={`Data ${type}`} />
 
             <main className="p-4">
-                <p className="font-bold mb-4 text-2xl">Data Pelaporan {type}</p>
+                <div className="flex justify-between">
+                    <p className="font-bold mb-4 text-2xl">
+                        Data Pelaporan {type}
+                    </p>
+                    {route().current("data.kegiatan") &&
+                        auth.user &&
+                        auth.user.role === "staff" && (
+                            <Link href={route("lapor.kegiatan")}>
+                                <Button>Update Kegiatan</Button>
+                            </Link>
+                        )}
+                </div>
 
                 <div className="bg-white rounded-lg p-6">
                     <Table>
@@ -57,6 +80,7 @@ export default function DataInsiden({
                                 <TableHead>Insiden</TableHead>
                                 <TableHead>Deskripsi</TableHead>
                                 <TableHead>Lokasi</TableHead>
+                                <TableHead>Keterangan</TableHead>
                                 <TableHead></TableHead>
                             </TableRow>
                         </TableHeader>
@@ -69,16 +93,60 @@ export default function DataInsiden({
                                     <TableCell>{report.title}</TableCell>
                                     <TableCell>{report.description}</TableCell>
                                     <TableCell>{report.location}</TableCell>
-                                    <TableCell className="text-right">
+                                    <TableCell>
+                                        {report.keterangan || "-"}
+                                    </TableCell>
+                                    <TableCell className="text-right space-x-2">
+                                        <TooltipProvider>
+                                            <Tooltip>
+                                                <TooltipTrigger>
+                                                    <Link
+                                                        href={route(
+                                                            "data.informasi",
+                                                            {
+                                                                id: report.id,
+                                                            }
+                                                        )}
+                                                    >
+                                                        <Button>
+                                                            <InformationCircleIcon className="w-4 h-4" />
+                                                        </Button>
+                                                    </Link>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p>Cek lebih lanjut</p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+
                                         <Dialog>
-                                            <DialogTrigger asChild>
-                                                <Button
-                                                    disabled={
-                                                        report.files.length < 1
-                                                    }
-                                                >
-                                                    <EyeIcon className="w-4 h-4" />
-                                                </Button>
+                                            <DialogTrigger>
+                                                <TooltipProvider>
+                                                    <Tooltip>
+                                                        <TooltipTrigger
+                                                            disabled={
+                                                                report.files
+                                                                    .length < 1
+                                                            }
+                                                        >
+                                                            <Button
+                                                                disabled={
+                                                                    report.files
+                                                                        .length <
+                                                                    1
+                                                                }
+                                                            >
+                                                                <EyeIcon className="w-4 h-4" />
+                                                            </Button>
+                                                        </TooltipTrigger>
+                                                        <TooltipContent>
+                                                            <p>
+                                                                Cek foto
+                                                                kejadian
+                                                            </p>
+                                                        </TooltipContent>
+                                                    </Tooltip>
+                                                </TooltipProvider>
                                             </DialogTrigger>
                                             <DialogContent>
                                                 <DialogHeader>
@@ -105,6 +173,63 @@ export default function DataInsiden({
                                                 </DialogHeader>
                                             </DialogContent>
                                         </Dialog>
+
+                                        {auth.user &&
+                                            auth.user.role === "staff" && (
+                                                <Dialog>
+                                                    <DialogTrigger>
+                                                        <TooltipProvider>
+                                                            <Tooltip>
+                                                                <TooltipTrigger>
+                                                                    <Button>
+                                                                        <TrashIcon className="w-4 h-4" />
+                                                                    </Button>
+                                                                </TooltipTrigger>
+                                                                <TooltipContent>
+                                                                    <p>
+                                                                        Hapus
+                                                                        laporan
+                                                                    </p>
+                                                                </TooltipContent>
+                                                            </Tooltip>
+                                                        </TooltipProvider>
+                                                    </DialogTrigger>
+                                                    <DialogContent>
+                                                        <DialogHeader>
+                                                            <DialogTitle>
+                                                                Are you sure
+                                                                absolutely sure?
+                                                            </DialogTitle>
+                                                            <DialogDescription>
+                                                                This action
+                                                                cannot be
+                                                                undone. Are you
+                                                                sure you want to
+                                                                permanently
+                                                                delete this file
+                                                                from our
+                                                                servers?
+                                                            </DialogDescription>
+                                                        </DialogHeader>
+                                                        <DialogFooter>
+                                                            <Button>
+                                                                <Link
+                                                                    href={route(
+                                                                        "lapor.delete",
+                                                                        {
+                                                                            id: report.id,
+                                                                        }
+                                                                    )}
+                                                                    method="delete"
+                                                                    as="button"
+                                                                >
+                                                                    Confirm
+                                                                </Link>
+                                                            </Button>
+                                                        </DialogFooter>
+                                                    </DialogContent>
+                                                </Dialog>
+                                            )}
                                     </TableCell>
                                 </TableRow>
                             ))}

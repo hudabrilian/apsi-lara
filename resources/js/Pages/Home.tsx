@@ -12,14 +12,20 @@ export default function Home({ auth }: PageProps) {
                     <p className="font-bold mb-4 text-2xl">
                         Kegiatan Inspeksi K3 Bulanan Fakultas Teknik
                     </p>
-                    <div className="grid grid-cols-2 lg:grid-cols-3 gap-1">
+                    <img src="/k3.jpg" />
+                    <p className="absolute bottom-16 left-8 font-bold text-white w-1/2 text-2xl">
+                        Inspeksi oleh auditor K3 untuk mengatasi potensi bahaya
+                        yang diadukan oleh pelapor
+                    </p>
+
+                    {/* <div className="grid grid-cols-2 lg:grid-cols-3 gap-1">
                         <div className="bg-indigo-500 h-52"></div>
                         <div className="bg-indigo-500 h-52"></div>
                         <div className="bg-indigo-500 h-52"></div>
                         <div className="bg-indigo-500 h-52"></div>
                         <div className="bg-indigo-500 h-52"></div>
                         <div className="bg-indigo-500 h-52"></div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="w-1/4 space-y-8">
                     <div className="p-4 bg-gray-300 text-center">

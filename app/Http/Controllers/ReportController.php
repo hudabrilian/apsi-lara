@@ -26,6 +26,36 @@ class ReportController extends Controller
         return Inertia::render('LaporBahaya');
     }
 
+    public function formActivity(): Response
+    {
+        return Inertia::render('LaporKegiatan');
+    }
+
+    public function reportInformation(Report $report): Response
+    {
+        $reportData = Report::with('files')->where('id', $report->id)->get()->map(function ($report) {
+            $files = $report->files->map(function ($file) {
+                return [
+                    'id' => $file->id,
+                    'file' => $file ? asset(Storage::url($file->file)) : null,
+                ];
+            });
+
+            return [
+                'id' => $report->id,
+                'title' => $report->title,
+                'description' => $report->description,
+                'location' => $report->location,
+                'keterangan' => $report->keterangan,
+                'files' => $files,
+            ];
+        });
+
+        return Inertia::render('Laporan', [
+            'report' => $reportData[0]
+        ]);
+    }
+
     public function dataIncident(): Response
     {
         $reports = Report::with('files')->where('type', 'incident')->get()->map(function ($report) {
@@ -41,7 +71,9 @@ class ReportController extends Controller
                 'title' => $report->title,
                 'description' => $report->description,
                 'location' => $report->location,
+                'keterangan' => $report->keterangan,
                 'files' => $files,
+                'keterangan' => $report->keterangan
             ];
         });
 
@@ -66,7 +98,9 @@ class ReportController extends Controller
                 'title' => $report->title,
                 'description' => $report->description,
                 'location' => $report->location,
+                'keterangan' => $report->keterangan,
                 'files' => $files,
+                'keterangan' => $report->keterangan
             ];
         });
 
@@ -92,6 +126,7 @@ class ReportController extends Controller
                 'description' => $report->description,
                 'location' => $report->location,
                 'files' => $files,
+                'keterangan' => $report->keterangan
             ];
         });
 
@@ -132,6 +167,7 @@ class ReportController extends Controller
             'description' => $request->description,
             'location' => $request->location,
             'timeAt' => $request->timeAt,
+            'keterangan' => $request->keterangan
         ]);
 
         if (!is_null($request->file)) {
@@ -144,5 +180,12 @@ class ReportController extends Controller
         }
 
         return Redirect::route('home')->with('message', 'Succesfully submit');
+    }
+
+    public function remove(Report $report) 
+    {
+        $report->delete();
+
+        return Redirect::back()->with('message', 'Succesfully deleted');
     }
 }

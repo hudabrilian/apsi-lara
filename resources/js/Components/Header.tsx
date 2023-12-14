@@ -49,7 +49,7 @@ export default function Header({ user }: { user: User }) {
                     <div>
                         {user ? (
                             <DropdownMenu>
-                                <DropdownMenuTrigger>
+                                <DropdownMenuTrigger asChild>
                                     <Button>Hi, {user.name}</Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
@@ -70,7 +70,6 @@ export default function Header({ user }: { user: User }) {
                                         <Link
                                             href={route("logout")}
                                             method="post"
-                                            as="button"
                                         >
                                             Log Out
                                         </Link>
@@ -140,7 +139,7 @@ export default function Header({ user }: { user: User }) {
                                     )}
                                     asChild
                                 >
-                                    <Link href={route("home")}>
+                                    <Link href={route("sertifikasi.k3")}>
                                         Sertifikasi K3
                                     </Link>
                                 </NavigationMenuLink>
@@ -153,7 +152,7 @@ export default function Header({ user }: { user: User }) {
                                     )}
                                     asChild
                                 >
-                                    <Link href={route("home")}>Audit</Link>
+                                    <Link href={route("audit.k3")}>Audit</Link>
                                 </NavigationMenuLink>
                             </NavigationMenuItem>
                             <NavigationMenuItem>

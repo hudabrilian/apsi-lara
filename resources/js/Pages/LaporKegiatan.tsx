@@ -9,7 +9,7 @@ import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 import dateFormat from "dateformat";
 
-export default function LaporBahaya({ auth }: PageProps) {
+export default function LaporKegiatan({ auth }: PageProps) {
     const { data, setData, post, processing, errors, progress, reset } =
         useForm<{
             type: string;
@@ -17,13 +17,15 @@ export default function LaporBahaya({ auth }: PageProps) {
             description: string;
             location: string;
             timeAt: string;
+            keterangan: string;
             file?: File;
         }>({
-            type: "warning",
+            type: "activity",
             title: "",
             description: "",
             location: "",
             timeAt: dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM"),
+            keterangan: "",
             file: undefined,
         });
 
@@ -40,7 +42,9 @@ export default function LaporBahaya({ auth }: PageProps) {
             <Head title="Tentang Kami" />
 
             <main className="flex flex-col p-4">
-                <p className="font-bold mb-4 text-2xl">Data Pelaporan Bahaya</p>
+                <p className="font-bold mb-4 text-2xl">
+                    Data Pelaporan Kegiatan
+                </p>
 
                 <form onSubmit={submit} className="space-y-4">
                     <div className="flex space-x-6">
@@ -143,6 +147,29 @@ export default function LaporBahaya({ auth }: PageProps) {
 
                                 <InputError
                                     message={errors.timeAt}
+                                    className="mt-2"
+                                />
+                            </div>
+
+                            <div>
+                                <InputLabel
+                                    htmlFor="keterangan"
+                                    value="Keterangan"
+                                />
+
+                                <Input
+                                    id="keterangan"
+                                    name="keterangan"
+                                    value={data.keterangan}
+                                    className="mt-1 block w-full"
+                                    onChange={(e) =>
+                                        setData("keterangan", e.target.value)
+                                    }
+                                    required
+                                />
+
+                                <InputError
+                                    message={errors.keterangan}
                                     className="mt-2"
                                 />
                             </div>

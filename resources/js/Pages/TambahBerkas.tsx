@@ -9,38 +9,32 @@ import { Head, useForm } from "@inertiajs/react";
 import { FormEventHandler } from "react";
 import dateFormat from "dateformat";
 
-export default function LaporBahaya({ auth }: PageProps) {
+export default function TambahBerkas({ auth }: PageProps) {
     const { data, setData, post, processing, errors, progress, reset } =
         useForm<{
-            type: string;
             title: string;
             description: string;
-            location: string;
-            timeAt: string;
-            file?: File;
+            file: File | undefined;
         }>({
-            type: "warning",
             title: "",
             description: "",
-            location: "",
-            timeAt: dateFormat(new Date(), "yyyy-mm-dd'T'HH:MM"),
             file: undefined,
         });
 
     const submit: FormEventHandler = (e) => {
         e.preventDefault();
 
-        post(route("lapor.submit"), {
+        post(route("store.dokumen"), {
             forceFormData: true,
         });
     };
 
     return (
         <Layout user={auth.user}>
-            <Head title="Tentang Kami" />
+            <Head title="Tambah Berkas" />
 
             <main className="flex flex-col p-4">
-                <p className="font-bold mb-4 text-2xl">Data Pelaporan Bahaya</p>
+                <p className="font-bold mb-4 text-2xl">Tambah Berkas</p>
 
                 <form onSubmit={submit} className="space-y-4">
                     <div className="flex space-x-6">
@@ -88,64 +82,6 @@ export default function LaporBahaya({ auth }: PageProps) {
                                     className="mt-2"
                                 />
                             </div>
-
-                            <div>
-                                <InputLabel
-                                    htmlFor="location"
-                                    value="Location"
-                                />
-
-                                <Input
-                                    id="location"
-                                    name="location"
-                                    value={data.location}
-                                    className="mt-1 block w-full"
-                                    onChange={(e) =>
-                                        setData("location", e.target.value)
-                                    }
-                                    required
-                                />
-
-                                <InputError
-                                    message={errors.location}
-                                    className="mt-2"
-                                />
-                            </div>
-
-                            <div>
-                                <InputLabel htmlFor="timeAt" value="Time" />
-
-                                {/* <TextInput
-                                    id="timeAt"
-                                    name="timeAt"
-                                    value={data.timeAt}
-                                    className="mt-1 block w-full"
-                                    onChange={(e) =>
-                                        setData("timeAt", e.target.value)
-                                    }
-                                    required
-                                /> */}
-
-                                <Input
-                                    id="timeAt"
-                                    name="timeAt"
-                                    value={data.timeAt}
-                                    type="datetime-local"
-                                    onChange={(e) =>
-                                        setData("timeAt", e.target.value)
-                                    }
-                                    max={dateFormat(
-                                        new Date(),
-                                        "yyyy-mm-dd'T'HH:MM"
-                                    )}
-                                    required
-                                />
-
-                                <InputError
-                                    message={errors.timeAt}
-                                    className="mt-2"
-                                />
-                            </div>
                         </div>
                         <div className="w-1/2 flex flex-col space-y-4">
                             {data.file && (
@@ -171,6 +107,11 @@ export default function LaporBahaya({ auth }: PageProps) {
                                     }
                                 />
 
+                                <InputError
+                                    message={errors.file}
+                                    className="mt-2"
+                                />
+
                                 {progress && (
                                     <progress
                                         value={progress.percentage}
@@ -179,11 +120,6 @@ export default function LaporBahaya({ auth }: PageProps) {
                                         {progress.percentage}%
                                     </progress>
                                 )}
-
-                                <InputError
-                                    message={errors.timeAt}
-                                    className="mt-2"
-                                />
                             </div>
                         </div>
                     </div>
